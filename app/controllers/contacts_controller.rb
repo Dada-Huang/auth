@@ -3,15 +3,19 @@ class ContactsController < ApplicationController
   def show
     @contact = Contact.find_by({ "id" => params["id"] })
     @company = Company.find_by({ "id" => @contact["company_id"] })
-    @activities = Activity.where({ "contact_id" => @contact["id"] })
+    @activities = Activity.where({ "contact_id" => @contact["id"], "user_id" => @current_user["id"] })
     @activity = Activity.new
     @activity["contact_id"] = @contact["id"]
   end
 
   def new
-    @contact = Contact.new
-    @company = Company.find_by({ "id" => params["company_id"] })
-    @contact["company_id"] = @company["id"]
+    if @current_user
+      @contact = Contact.new
+      @company = Company.find_by({ "id" => params["company_id"] })
+      @contact["company_id"] = @company["id"]
+    else
+      redirect_to "/sessions/new"
+    end
   end
 
   def create

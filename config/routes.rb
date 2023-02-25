@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   resources "tasks"
   resources "users"
   resources "sessions"
+
+  get "/logout", :controller => "sessions", :action => "destroy"
 end
